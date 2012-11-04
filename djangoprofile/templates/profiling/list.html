@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block content %}
+<ul>
+  {% for file in files %}
+    <li><a href="{% url "profile" filename=file %}">{{ file }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

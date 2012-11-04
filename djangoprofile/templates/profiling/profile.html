@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block title %}
+Profile : {{filename}}
+{% endblock %}
+
+{% block extra_head %}
+<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/profile.css" />
+<script src="{{ STATIC_URL }}js/jquery-1.8.2.js"></script>
+<script src="{{ STATIC_URL }}js/jquery.svg.js"></script>
+<script src="{{ STATIC_URL }}js/profile.js"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="viewport">
+    <div class="graph" data-href-svg="{% url "profile_svg" filename=filename %}">
+    </div>
+
+    <button class="zoomin">+</button>
+    <button class="zoomout">-</button>
+  </div>
+{% endblock %}

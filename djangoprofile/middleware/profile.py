@@ -1,10 +1,7 @@
 import os.path
-import sys
 import time
-import hotshot
-import hotshot.stats
+import cProfile
 from django.conf import settings
-from cStringIO import StringIO
 
 
 class ProfileMiddleware(object):
@@ -20,9 +17,10 @@ class ProfileMiddleware(object):
     """
     def process_request(self, request):
         if settings.DEBUG and 'prof' in request.GET:
-            filename = 'profile-' + time.strftime("%Y%m%dT%H%M%S", time.gmtime()) + '.prof'
+            filename = 'profile-{}.prof'.format(
+                time.strftime("%Y%m%dT%H%M%S", time.gmtime()))
             self.filename = os.path.join(settings.PROFILE_DIR, filename)
-            self.prof = hotshot.Profile(self.filename)
+            self.prof = cProfile.Profile()
 
     def process_view(self, request, callback, callback_args, callback_kwargs):
         if settings.DEBUG and 'prof' in request.GET:
@@ -30,20 +28,25 @@ class ProfileMiddleware(object):
 
     def process_response(self, request, response):
         if settings.DEBUG and 'prof' in request.GET:
-            self.prof.close()
-
-            out = StringIO()
-            old_stdout = sys.stdout
-            sys.stdout = out
-
-            stats = hotshot.stats.load(self.filename)
-            stats.sort_stats('time', 'calls')
-            stats.print_stats()
-
-            sys.stdout = old_stdout
-            stats_str = out.getvalue()
-
-            if response and response.content and stats_str:
-                response.content = "<pre>" + stats_str + "</pre>"
-
+            self.prof.dump_stats(self.filename)
         return response
+
+#    def process_response(self, request, response):
+#        if settings.DEBUG and 'prof' in request.GET:
+#            self.prof.close()
+#
+#            out = StringIO()
+#            old_stdout = sys.stdout
+#            sys.stdout = out
+#
+#            stats = hotshot.stats.load(self.filename)
+#            stats.sort_stats('time', 'calls')
+#            stats.print_stats()
+#
+#            sys.stdout = old_stdout
+#            stats_str = out.getvalue()
+#
+#            if response and response.content and stats_str:
+#                response.content = "<pre>" + stats_str + "</pre>"
+#
+#        return response
