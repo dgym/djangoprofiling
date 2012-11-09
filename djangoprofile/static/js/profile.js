@@ -44,6 +44,7 @@ function($, graph) {
                 $('.edge').click(function() {
                     var edge_id = this.id.substr(4);
                     var edge = callgraph.edges[edge_id];
+                    console.log(edge_id);
                     console.log(edge.from.obj);
                     console.log(edge.to.obj);
                 });
@@ -53,25 +54,41 @@ function($, graph) {
                     var node = callgraph.nodes[node_id];
 
                     $('.info .current-node').text(node.name);
+                    $(".info .node-info").remove();
+                    var calls = $.map(node.outlets, function(out,i) {
+                        return out.to;
+                    });
+
+                    var callers = $.map(node.inlets, function(inn,i) {
+                        return inn.from;
+                    });
+
+                    var params ={
+                        name: node.name,
+                        callers: callers,
+                        calls: calls
+                    };
+
+                    var $tmpl = $("#nodeInfoTmpl");
+                    $tmpl.tmpl(params).appendTo('.info');
                 });
 
-                $('button.search').click(function() {
+                $('.search button').click(function() {
                     var query = $('input[name=query]').val();
                     var results = callgraph.search(query);
                     $(".info .search-results").remove();
                     $tmpl = $("#searchResultsTmpl");
                     $tmpl.tmpl({
-                        results: 
-                            $(results).map(function() {
-                                return { 
-                                    name: this.name,
-                                    id: this.$el.attr('id')
-                                };
-                            })
-                    }).appendTo(".info");
+                        results: results
+                    }).appendTo(".search");
 
                     return false;
                 });
+
+                function scrollTo(left, top) {
+                    $viewport.scrollLeft(left);
+                    $viewport.scrollTop(top);
+                }
 
                 function centreInView($el, $graph) {
                     // Centre horizontally
@@ -80,7 +97,6 @@ function($, graph) {
                     var moveLeft = actualLeft - centreLeft;
 
                     var viewLeft = $viewport.scrollLeft();
-                    $viewport.scrollLeft(viewLeft + moveLeft);
 
                     // Centre vertically
                     var centreTop = $graph.height()/2 - $el.width()/2;
@@ -88,10 +104,11 @@ function($, graph) {
                     var moveTop = actualTop - centreTop;
 
                     var viewTop = $viewport.scrollTop();
-                    $viewport.scrollTop(viewTop + moveTop);
+
+                    scrollTo(viewLeft + moveLeft, viewTop + moveTop);
                 }
 
-                $('.info').on('click', '.search-results li', function() {
+                $('.info').on('click', '.node-list li', function() {
                     var node_id = $(this).data('node-id');
                     var $node = $('#' + node_id);
 
@@ -99,21 +116,5 @@ function($, graph) {
                 });
             }
         });
-
-        
-        /*
-        var scale = 1;
-        $(".zoomin").click(function() {
-            scale *= 2;
-            $graph.attr({ transform: "scale(" + scale + "," + scale + "); translate(0,0)"});
-        });
-
-        $(".zoomout").click(function() {
-            scale /= 2;
-            $graph.attr({ transform: "scale(" + scale + "," + scale + "); translate(0,0)"});
-        });
-        */
-
     });
-
 });

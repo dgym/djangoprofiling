@@ -5,18 +5,12 @@ define([], function() {
         this.inlets = [];
         this.$el = $el;
         this.text = this.text();
-
+        this.id = $el.attr('id');
         var parts = $('text', $el).map(function(){
             return $(this).text();
         });
 
-
         this.name = parts[0];
-        /*
-        this.total_time_ratio = parts[1];
-        this.time_ratio = parts[2];
-        this.called = parts[3];
-        */
     };
 
     Node.prototype = {
@@ -63,6 +57,7 @@ define([], function() {
                 }
 
                 edge = new Edge(edge);
+                console.log(edge);
 
                 // Connect everything up
                 edge.from = graph.nodes[from_id];

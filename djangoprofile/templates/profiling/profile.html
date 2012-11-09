@@ -7,6 +7,7 @@ Profile : {{filename}}
 {% endblock %}
 
 {% block extra_head %}
+<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/reset.css" />
 <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/profile.css" />
 <!--script src="{{ STATIC_URL }}js/jquery-1.8.2.js"></script>
 <script src="{{ STATIC_URL }}js/jquery.svg.js"></script>
@@ -30,20 +31,44 @@ Profile : {{filename}}
     <button class="zoomout">-</button>
   </div>
   <div class="info">
-    <div class="current-node">
+    <div class="search">
+      <h2>Search</h2>
+      <form>
+        <input name="query" type="text"></input>
+        <button type="submit">Search</button>
+      </form>
     </div>
-    <form>
-      <input name="query" type="text"></input>
-      <button type="submit" class="search">Search</button>
-    </form>
   </div>
+
   <script type="text/x-jquery-tmpl" id="searchResultsTmpl">
     {% verbatim %}
-    <ul class="search-results">
+    <ul class="search-results node-list">
       {{each(i,result) results}}
       <li data-node-id="${result.id}">${result.name}</li>
       {{/each}}
     </ul>
+    {% endverbatim %}
+  </script>
+
+  <script type="text/x-jquery-tmpl" id="nodeInfoTmpl">
+    {% verbatim %}
+    <div class="node-info">
+      <span class="current-node-name">${name}</span>
+
+      <h3>Called By</h3>
+      <ul class="callers node-list">
+        {{each(i,caller) callers}}
+        <li data-node-id="${caller.id}">${caller.name}</li>
+        {{/each}}
+      </ul>
+
+      <h3>Calls</h3>
+      <ul class="calls node-list">
+        {{each(i,callee) calls}}
+        <li data-node-id="${callee.id}">${callee.name}</li>
+        {{/each}}
+      </ul>
+    </div>
     {% endverbatim %}
   </script>
 

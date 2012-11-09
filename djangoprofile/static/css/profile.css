@@ -1,7 +1,12 @@
 * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 
+body {
+  font-size: 13px/1.3;
+  font-family: 'Open Sans', 'Verdana', sans-serif;
+}
+
 .viewport {
-  width: 80%;
+  width: 75%;
   height: 640px;
   overflow: scroll;
   float: left;
@@ -14,7 +19,7 @@
 }
 
 .info {
-  width: 20%;
+  width: 25%;
   float: right;
 }
 
@@ -24,4 +29,43 @@
 
 .node, .edge {
   cursor: pointer;
+}
+
+.node .selected {
+    border: 3px solid yellow;
+}
+
+.search {
+  padding: 0.5em;
+}
+
+.search-results {
+  height: 8em;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.node-info {
+    padding: 1em;
+}
+
+.current-node-name {
+  font-weight: bold;
+  display: block;
+  line-height: 2;
+}
+
+.node-list li {
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.calls li,
+.callers li {
+  display: inline-block;
+  background: #444;
+  color: white;
+  padding: 0.5em;
+  margin: 0.5em;
 }
