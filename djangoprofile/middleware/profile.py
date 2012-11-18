@@ -3,6 +3,8 @@ import time
 import cProfile
 from django.conf import settings
 
+# Derived from http://djangosnippets.org/snippets/186/
+
 
 class ProfileMiddleware(object):
     """
