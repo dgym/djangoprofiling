@@ -32,23 +32,3 @@ class ProfileMiddleware(object):
         if settings.DEBUG and 'prof' in request.GET:
             self.prof.dump_stats(self.filename)
         return response
-
-#    def process_response(self, request, response):
-#        if settings.DEBUG and 'prof' in request.GET:
-#            self.prof.close()
-#
-#            out = StringIO()
-#            old_stdout = sys.stdout
-#            sys.stdout = out
-#
-#            stats = hotshot.stats.load(self.filename)
-#            stats.sort_stats('time', 'calls')
-#            stats.print_stats()
-#
-#            sys.stdout = old_stdout
-#            stats_str = out.getvalue()
-#
-#            if response and response.content and stats_str:
-#                response.content = "<pre>" + stats_str + "</pre>"
-#
-#        return response
