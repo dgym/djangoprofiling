@@ -1,9 +1,9 @@
 require(["jquery", 
-         "graph", 
+         "call-graph", 
          "vendor/jquery.svg",
          "vendor/jquery.tmpl"],
 
-function($, graph) {
+function($, CallGraph) {
 
     function restoreIntendedScale(svg) {
         // Read in and split the viewBoxAttr
@@ -38,7 +38,7 @@ function($, graph) {
 
                 restoreIntendedScale(svg);
 
-                var callgraph = new graph.Graph(root);
+                var callgraph = new CallGraph(root);
                 callgraph.index();
 
                 $('.edge').click(function() {

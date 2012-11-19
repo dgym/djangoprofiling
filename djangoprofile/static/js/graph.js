@@ -4,18 +4,17 @@ define([], function() {
         this.outlets = [];
         this.inlets = [];
         this.$el = $el;
-        this.text = this.text();
         this.id = $el.attr('id');
-        var parts = $('text', $el).map(function(){
-            return $(this).text();
-        });
-
-        this.name = parts[0];
+        this.parse();
     };
 
     Node.prototype = {
-        text: function() {
-            return this.$el.text();
+        parse: function() {
+            this.fullText = this.$el.text();
+        },
+
+        getFullText: function() {
+            return this.fullText;
         }
     };
 
@@ -33,6 +32,14 @@ define([], function() {
 
     Graph.prototype = {
 
+        newNode: function($el) {
+            return new Node($el);
+        },
+
+        newEdge: function($el) {
+            return new Edge($el);
+        },
+
         index: function() {
             var graph = this;
 
@@ -49,15 +56,14 @@ define([], function() {
 
                 // Create the node objects if necessary
                 if ( typeof graph.nodes[from_id] === 'undefined' ) {
-                    graph.nodes[from_id] = new Node($('#node'+from_id, graph.svgdoc));
+                    graph.nodes[from_id] = graph.newNode($('#node'+from_id, graph.svgdoc));
                 }
 
                 if ( typeof graph.nodes[to_id] === 'undefined' ) {
-                    graph.nodes[to_id] = new Node($('#node'+to_id, graph.svgdoc));
+                    graph.nodes[to_id] = graph.newNode($('#node'+to_id, graph.svgdoc));
                 }
 
-                edge = new Edge(edge);
-                console.log(edge);
+                edge = graph.newEdge(edge);
 
                 // Connect everything up
                 edge.from = graph.nodes[from_id];
@@ -70,7 +76,7 @@ define([], function() {
 
         search: function(query) {
             return this.nodes.filter(function(obj) {
-                return obj.text.match(query);
+                return obj.getFullText().match(query);
             });
         }
     };
