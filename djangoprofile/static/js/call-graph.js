@@ -37,18 +37,11 @@ function(inherit, graph) {
 
     var CallGraph = function(svgdoc) {
         graph.Graph.apply(this, arguments);
+        this.nodeType = CalledFunction;
+        this.edgeType = FunctionCall;
     };
 
     inherit(CallGraph, graph.Graph);
 
-    CallGraph.prototype.newNode = function($el) {
-        return new CalledFunction($el);
-    };
-
-    CallGraph.prototype.newEdge = function($el) {
-        return new FunctionCall($el);
-    };
-
     return CallGraph;
-
 });

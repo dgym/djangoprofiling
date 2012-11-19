@@ -28,17 +28,11 @@ define([], function() {
         this.edges = [];
         this.nodes = [];
         this.svgdoc = svgdoc;
+        this.nodeType = Node;
+        this.edgeType = Edge;
     };
 
     Graph.prototype = {
-
-        newNode: function($el) {
-            return new Node($el);
-        },
-
-        newEdge: function($el) {
-            return new Edge($el);
-        },
 
         index: function() {
             var graph = this;
@@ -56,14 +50,14 @@ define([], function() {
 
                 // Create the node objects if necessary
                 if ( typeof graph.nodes[from_id] === 'undefined' ) {
-                    graph.nodes[from_id] = graph.newNode($('#node'+from_id, graph.svgdoc));
+                    graph.nodes[from_id] = new graph.nodeType($('#node'+from_id, graph.svgdoc));
                 }
 
                 if ( typeof graph.nodes[to_id] === 'undefined' ) {
-                    graph.nodes[to_id] = graph.newNode($('#node'+to_id, graph.svgdoc));
+                    graph.nodes[to_id] = new graph.nodeType($('#node'+to_id, graph.svgdoc));
                 }
 
-                edge = graph.newEdge(edge);
+                edge = new graph.edgeType(edge);
 
                 // Connect everything up
                 edge.from = graph.nodes[from_id];
