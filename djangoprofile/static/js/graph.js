@@ -5,12 +5,14 @@ define([], function() {
         this.inlets = [];
         this.$el = $el;
         this.id = $el.attr('id');
-        this.parse();
+        this.fullText = this.$el.text();
+        this.textFragments = $('text', this.$el).map(function(){
+            return $(this).text();
+        });
     };
 
     Node.prototype = {
         parse: function() {
-            this.fullText = this.$el.text();
         },
 
         getFullText: function() {
@@ -22,6 +24,9 @@ define([], function() {
         this.from = null;
         this.to = null;
         this.$el = $el;
+        this.textFragments = $('text', this.$el).map(function(){
+            return $(this).text();
+        });
     };
 
     var Graph = function(svgdoc) {

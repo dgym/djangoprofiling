@@ -6,19 +6,35 @@ function(inherit, graph) {
     //
     var CalledFunction = function($el) {
         graph.Node.apply(this, arguments);
+
+        this.name = this.textFragments[0];
     };
 
     inherit(CalledFunction, graph.Node);
 
-    CalledFunction.prototype.parse = function() {
-        graph.Node.prototype.parse.apply(this, arguments);
-
-        var parts = $('text', this.$el).map(function(){
-            return $(this).text();
+    CalledFunction.prototype.getCalls = function() {
+        return $.map(this.outlets, function(call) {
+            return {
+                name:       call.to.name,
+                id:         call.to.id,
+                percentage: call.percentageOfTime,
+                time:       call.timesCalled
+            };
+        }).sort(function(call1, call2) {
+            return call2.percentage - call1.percentage;
         });
-        this.parts = parts;
-        this.name = parts[0];
     };
+
+    CalledFunction.prototype.getCallers = function() {
+        return $.map(this.inlets, function(call) {
+            return {
+                name:       call.from.name,
+                id:         call.from.id,
+                percentage: call.percentageOfTime,
+                time:       call.timesCalled
+            };
+        });
+    }
 
     //
     // Function call - represented by edge
@@ -26,10 +42,11 @@ function(inherit, graph) {
 
     var FunctionCall = function($el ) {
         graph.Edge.apply(this, arguments);
+        this.percentageOfTime = parseFloat(this.textFragments[0]);
+        this.timescalled = this.textFragments[1];
     };
 
     inherit(FunctionCall, graph.Edge);
-
 
     //
     // Call graph

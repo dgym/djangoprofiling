@@ -34,6 +34,29 @@ Profile : {{filename}}
     </div>
   </div>
 
+  <script type="text/x-jquery-tmpl" id="nodeInfoTmpl">
+    {% verbatim %}
+    <div class="node-info">
+      <span class="current-node-name">${name}</span>
+
+      <h3>Calls</h3>
+      <ul class="calls node-list">
+        {{each(i,callee) calls}}
+        <li data-node-id="${callee.id}">${callee.name} (${callee.percentage}%)</li>
+        {{/each}}
+      </ul>
+
+      <h3>Called By</h3>
+      <ul class="callers node-list">
+        {{each(i,caller) callers}}
+        <li data-node-id="${caller.id}">${caller.name}</li>
+        {{/each}}
+      </ul>
+
+    </div>
+    {% endverbatim %}
+  </script>
+
   <script type="text/x-jquery-tmpl" id="searchResultsTmpl">
     {% verbatim %}
     <ul class="search-results node-list">
@@ -44,26 +67,5 @@ Profile : {{filename}}
     {% endverbatim %}
   </script>
 
-  <script type="text/x-jquery-tmpl" id="nodeInfoTmpl">
-    {% verbatim %}
-    <div class="node-info">
-      <span class="current-node-name">${name}</span>
-
-      <h3>Called By</h3>
-      <ul class="callers node-list">
-        {{each(i,caller) callers}}
-        <li data-node-id="${caller.id}">${caller.name}</li>
-        {{/each}}
-      </ul>
-
-      <h3>Calls</h3>
-      <ul class="calls node-list">
-        {{each(i,callee) calls}}
-        <li data-node-id="${callee.id}">${callee.name}</li>
-        {{/each}}
-      </ul>
-    </div>
-    {% endverbatim %}
-  </script>
 
 {% endblock %}

@@ -55,18 +55,11 @@ function($, CallGraph) {
 
                     $('.info .current-node').text(node.name);
                     $(".info .node-info").remove();
-                    var calls = $.map(node.outlets, function(out,i) {
-                        return out.to;
-                    });
-
-                    var callers = $.map(node.inlets, function(inn,i) {
-                        return inn.from;
-                    });
 
                     var params ={
                         name: node.name,
-                        callers: callers,
-                        calls: calls
+                        callers: node.getCallers(),
+                        calls: node.getCalls()
                     };
 
                     var $tmpl = $("#nodeInfoTmpl");
