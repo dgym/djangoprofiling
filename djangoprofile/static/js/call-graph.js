@@ -7,7 +7,7 @@ function(inherit, graph) {
     var CalledFunction = function($el) {
         graph.Node.apply(this, arguments);
 
-        this.name = this.textFragments[0];
+        this.name = this.getTextFragment(0);
     };
 
     inherit(CalledFunction, graph.Node);
@@ -34,7 +34,7 @@ function(inherit, graph) {
                 time:       call.timesCalled
             };
         });
-    }
+    };
 
     //
     // Function call - represented by edge
@@ -42,8 +42,8 @@ function(inherit, graph) {
 
     var FunctionCall = function($el ) {
         graph.Edge.apply(this, arguments);
-        this.percentageOfTime = parseFloat(this.textFragments[0]);
-        this.timescalled = this.textFragments[1];
+        this.percentageOfTime = parseFloat(this.getTextFragment(0));
+        this.timescalled = this.getTextFragment(this.getTextFragment(1));
     };
 
     inherit(FunctionCall, graph.Edge);

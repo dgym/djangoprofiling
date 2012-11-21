@@ -1,8 +1,6 @@
-define([], function() {
+define(['inherit'], function(inherit) {
 
-    var Node = function($el) {
-        this.outlets = [];
-        this.inlets = [];
+    var SvgGraphElement = function($el) {
         this.$el = $el;
         this.id = $el.attr('id');
         this.fullText = this.$el.text();
@@ -11,23 +9,30 @@ define([], function() {
         });
     };
 
-    Node.prototype = {
-        parse: function() {
-        },
-
-        getFullText: function() {
-            return this.fullText;
+    SvgGraphElement.prototype = {
+        getTextFragment: function(index) {
+            if (typeof this.textFragments[index] !== 'undefined') {
+                return this.textFragments[index];
+            }
+            return '';
         }
     };
 
+    var Node = function($el) {
+        SvgGraphElement.apply(this, arguments);
+        this.outlets = [];
+        this.inlets = [];
+    };
+
     var Edge = function($el) {
+        SvgGraphElement.apply(this, arguments);
         this.from = null;
         this.to = null;
-        this.$el = $el;
-        this.textFragments = $('text', this.$el).map(function(){
-            return $(this).text();
-        });
     };
+
+    inherit(Node, SvgGraphElement);
+    inherit(Edge, SvgGraphElement);
+
 
     var Graph = function(svgdoc) {
         this.edges = [];
@@ -45,11 +50,12 @@ define([], function() {
             // Iterate over each edge
             $('.edge', this.svgdoc).each(function() {
 
-                var edge = this;
-                var edge_id = edge.id.substr(4);
+                var edge = new graph.edgeType($(this));
+
+                var edge_id = edge.id;
 
                 // Edge's title attribute contains ids of from and to nodes
-                var ends = $('title', edge).text().split('->');
+                var ends = $('title', this).text().split('->');
                 var from_id = parseInt(ends[0],10);
                 var to_id = parseInt(ends[1],10);
 
@@ -62,8 +68,6 @@ define([], function() {
                     graph.nodes[to_id] = new graph.nodeType($('#node'+to_id, graph.svgdoc));
                 }
 
-                edge = new graph.edgeType(edge);
-
                 // Connect everything up
                 edge.from = graph.nodes[from_id];
                 edge.to = graph.nodes[to_id];
@@ -75,7 +79,7 @@ define([], function() {
 
         search: function(query) {
             return this.nodes.filter(function(obj) {
-                return obj.getFullText().match(query);
+                return obj.fullText.match(query);
             });
         }
     };
