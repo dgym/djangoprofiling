@@ -44,9 +44,6 @@ function($, CallGraph) {
                 $('.edge').click(function() {
                     var edge_id = this.id.substr(4);
                     var edge = callgraph.edges[edge_id];
-                    console.log(edge_id);
-                    console.log(edge.from.obj);
-                    console.log(edge.to.obj);
                 });
 
                 $('.node').click(function() {

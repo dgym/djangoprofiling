@@ -17,6 +17,7 @@ function(inherit, graph) {
             return {
                 name:       call.to.name,
                 id:         call.to.id,
+                fill:       call.to.fillColour,
                 percentage: call.percentageOfTime,
                 time:       call.timesCalled
             };
@@ -30,6 +31,7 @@ function(inherit, graph) {
             return {
                 name:       call.from.name,
                 id:         call.from.id,
+                fill:       call.from.fillColour,
                 percentage: call.percentageOfTime,
                 time:       call.timesCalled
             };

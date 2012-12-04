@@ -42,14 +42,16 @@ Profile : {{filename}}
       <h3>Calls</h3>
       <ul class="calls node-list">
         {{each(i,callee) calls}}
-        <li data-node-id="${callee.id}">${callee.name} (${callee.percentage}%)</li>
+        <li style="background-color: ${callee.fill}"
+            data-node-id="${callee.id}">${callee.name} (${callee.percentage}%)</li>
         {{/each}}
       </ul>
 
       <h3>Called By</h3>
       <ul class="callers node-list">
         {{each(i,caller) callers}}
-        <li data-node-id="${caller.id}">${caller.name}</li>
+        <li style="background-color: ${caller.fill}"
+            data-node-id="${caller.id}">${caller.name}</li>
         {{/each}}
       </ul>
 

@@ -22,6 +22,7 @@ define(['inherit'], function(inherit) {
         SvgGraphElement.apply(this, arguments);
         this.outlets = [];
         this.inlets = [];
+        this.fillColour = $('polygon', $el).attr('fill');
     };
 
     var Edge = function($el) {
