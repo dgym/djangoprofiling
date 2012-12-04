@@ -78,6 +78,17 @@ define(['inherit'], function(inherit) {
             });
         },
 
+        findEntryPoint: function() {
+            for (id in this.nodes) {
+                if ( this.nodes.hasOwnProperty(id) ) {
+                    var node = this.nodes[id];
+                    if ( node.inlets.length === 0 ) {
+                        return node;
+                    }
+                }
+            }
+        },
+
         search: function(query) {
             return this.nodes.filter(function(obj) {
                 return obj.fullText.match(query);

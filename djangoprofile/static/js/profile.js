@@ -41,6 +41,12 @@ function($, CallGraph) {
                 var callgraph = new CallGraph(root);
                 callgraph.index();
 
+                // Centre the initial call in the graph window.
+                var initialCall = callgraph.findEntryPoint();
+                if ( initialCall ) {
+                    centreInView(initialCall.$el, $('.graph'));
+                }
+
                 $('.edge').click(function() {
                     var edge_id = this.id.substr(4);
                     var edge = callgraph.edges[edge_id];
