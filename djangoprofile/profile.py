@@ -16,10 +16,10 @@ class Profile(object):
         self.ensure_directory(self.svg_dir)
 
     def process(self, filename):
-        prof_path = os.path.join(self.base_dir, "{}.prof".format(filename))
-        dot_path = os.path.join(self.dot_dir, "{}.dot".format(filename))
+        prof_path = os.path.join(self.base_dir, "{0}.prof".format(filename))
+        dot_path = os.path.join(self.dot_dir, "{0}.dot".format(filename))
 
-        self.svg_path = os.path.join(self.svg_dir, "{}.svg".format(filename))
+        self.svg_path = os.path.join(self.svg_dir, "{0}.svg".format(filename))
 
         # Process the profile into dot format
         self.__prof2dot(prof_path, dot_path)

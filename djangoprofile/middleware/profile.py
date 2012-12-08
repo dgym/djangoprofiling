@@ -19,7 +19,7 @@ class ProfileMiddleware(object):
     """
     def process_request(self, request):
         if settings.DEBUG and 'prof' in request.GET:
-            filename = 'profile-{}.prof'.format(
+            filename = 'profile-{0}.prof'.format(
                 time.strftime("%Y%m%dT%H%M%S", time.gmtime()))
             self.filename = os.path.join(settings.PROFILE_DIR, filename)
             self.prof = cProfile.Profile()
