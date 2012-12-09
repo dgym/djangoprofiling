@@ -10,6 +10,7 @@ from django.template import RequestContext
 
 def list(request):
     files = [os.path.splitext(f)[0] for f in os.listdir(settings.PROFILE_DIR) if re.match('.*\.prof', f)]
+    files.sort()
     return render_to_response(
         'profiling/list.html',
         {'files': files},
