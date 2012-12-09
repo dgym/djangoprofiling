@@ -23,11 +23,14 @@ To create a profile for a page add prof to the query parameters, e.g.
 http://localhost:8000/somepage?prof
 
 To see the profiles is it necessary to include the urls in your master urls.py file, e.g.
-if 'djangoprofile' in settings.INSTALLED_APPS:
-    urlpatterns += patterns('', url('^admin/profile/', include('djangoprofile.urls')))
-Then visit http://localhost:8000:/admin/profile/
+
+    if 'djangoprofile' in settings.INSTALLED_APPS:
+        urlpatterns += patterns('', url('^admin/profile/', include('djangoprofile.urls')))
+        
+Then visit http://localhost:8000/admin/profile/
 
 TODO
 ----
-confirm requirements
-think of a better name
+* confirm requirements
+* think of a better name
+* make it a proper admin page
