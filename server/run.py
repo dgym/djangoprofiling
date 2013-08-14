@@ -1,3 +1,4 @@
+import os
 import sys
 sys.path.append('site-packages')
 
@@ -21,6 +22,12 @@ def web_server():
 
 
 if __name__ == '__main__':
+
+    if '--daemon' in sys.argv:
+        if os.fork():
+            sys.exit(0)
+        if os.fork():
+            sys.exit(0)
 
     if '--debug' in sys.argv:
         bottle.debug(True)
