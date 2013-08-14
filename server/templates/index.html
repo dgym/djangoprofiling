@@ -1,0 +1,16 @@
+<html>
+    <body>
+        <table>
+            <tr>
+                <th>Profile</th>
+                <th>Raw SVG</th>
+            </tr>
+        %for filename in files:
+            <tr>
+                <td><a href='/profile/{{ filename }}'>{{ filename }}</a></td>
+                <td><a href='/svg/{{ filename }}'>svg</a></td>
+            </tr>
+        %end
+        </table>
+    </body>
+</html>

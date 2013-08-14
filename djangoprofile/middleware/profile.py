@@ -1,6 +1,9 @@
+import cProfile
+import marshal
 import os.path
 import time
-import cProfile
+import urllib2
+
 from django.conf import settings
 
 # Derived from http://djangosnippets.org/snippets/186/
@@ -19,9 +22,8 @@ class ProfileMiddleware(object):
     """
     def process_request(self, request):
         if settings.DEBUG and 'prof' in request.GET:
-            filename = 'profile-{0}.prof'.format(
+            self.filename = 'profile-{0}.prof'.format(
                 time.strftime("%Y%m%dT%H%M%S", time.gmtime()))
-            self.filename = os.path.join(settings.PROFILE_DIR, filename)
             self.prof = cProfile.Profile()
 
     def process_view(self, request, callback, callback_args, callback_kwargs):
@@ -30,5 +32,18 @@ class ProfileMiddleware(object):
 
     def process_response(self, request, response):
         if settings.DEBUG and 'prof' in request.GET:
-            self.prof.dump_stats(self.filename)
+            if getattr(settings, 'PROFILE_SERVER_URL', None):
+                self.prof.create_stats()
+                body = marshal.dumps(self.prof.stats)
+
+                urllib2.urlopen(
+                    '{0}saveprofile/{1}'.format(
+                        settings.PROFILE_SERVER_URL,
+                        self.filename[:-5],
+                    ),
+                    body,
+                ).close()
+            else:
+                self.prof.dump_stats(os.path.join(settings.PROFILE_DIR, self.filename))
+            del self.prof
         return response

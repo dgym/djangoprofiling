@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <link type="text/css" rel="stylesheet" href="/static/css/reset.css" />
+        <link type="text/css" rel="stylesheet" href="/static/css/profile.css" />
+        <script src="/static/js/vendor/require-jquery.js"></script>
+        <script>
+            require.config({
+                baseUrl: '/static/js/'
+            });
+            require(["profile"]);
+        </script>
+    </head>
+    <body>
+        <h1>{{ name }}</h1>
+
+        <div class="viewport">
+            <div class="graph" data-href-svg="/svg/{{ name }}">
+            </div>
+        </div>
+        <div class="info">
+            <div class="search">
+                <h2>Search</h2>
+                <form>
+                    <input name="query" type="text"></input>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <script type="text/x-jquery-tmpl" id="nodeInfoTmpl">
+            <div class="node-info">
+                <span class="current-node-name">${name}</span>
+
+                <h3>Calls</h3>
+                <ul class="calls node-list">
+                    {{"{{"}}each(i,callee) calls}}
+                    <li style="background-color: ${callee.fill}"
+                    data-node-id="${callee.id}">${callee.name} (${callee.percentage}%)</li>
+                    {{"{{"}}/each}}
+                </ul>
+
+                <h3>Called By</h3>
+                <ul class="callers node-list">
+                    {{"{{"}}each(i,caller) callers}}
+                    <li style="background-color: ${caller.fill}"
+                    data-node-id="${caller.id}">${caller.name}</li>
+                    {{"{{"}}/each}}
+                </ul>
+
+            </div>
+        </script>
+
+        <script type="text/x-jquery-tmpl" id="searchResultsTmpl">
+            <ul class="search-results node-list">
+                {{"{{"}}each(i,result) results}}
+                <li data-node-id="${result.id}">${result.name}</li>
+                {{"{{"}}/each}}
+            </ul>
+        </script>
+    </body>
+</html>
