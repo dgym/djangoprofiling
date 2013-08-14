@@ -1,7 +1,8 @@
 import sys
-from wsgiref.simple_server import make_server
+sys.path.append('site-packages')
 
 import bottle
+from cherrypy import wsgiserver
 
 
 def web_server():
@@ -12,12 +13,14 @@ def web_server():
             application.init()
         return application.application(environ, start_response)
 
-    httpd = make_server('0.0.0.0', 8079, app)
-    httpd.serve_forever()
+    server = wsgiserver.CherryPyWSGIServer(('0.0.0.0', 8079), app)
+    try:
+        server.start()
+    except KeyboardInterrupt:
+        server.stop()
 
 
 if __name__ == '__main__':
-    sys.path.append('site-packages')
 
     if '--debug' in sys.argv:
         bottle.debug(True)
