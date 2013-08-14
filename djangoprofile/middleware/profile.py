@@ -1,8 +1,9 @@
+import httplib2
 import cProfile
 import marshal
 import os.path
+import socket
 import time
-import urllib2
 
 from django.conf import settings
 
@@ -27,22 +28,32 @@ class ProfileMiddleware(object):
             self.prof = cProfile.Profile()
 
     def process_view(self, request, callback, callback_args, callback_kwargs):
-        if settings.DEBUG and 'prof' in request.GET:
+        if hasattr(self, 'prof'):
             return self.prof.runcall(callback, request, *callback_args, **callback_kwargs)
 
     def process_response(self, request, response):
-        if settings.DEBUG and 'prof' in request.GET:
+        if hasattr(self, 'prof'):
             if getattr(settings, 'PROFILE_SERVER_URL', None):
+                url = '{0}saveprofile/{1}'.format(
+                    settings.PROFILE_SERVER_URL,
+                    self.filename[:-5],
+                )
+
                 self.prof.create_stats()
                 body = marshal.dumps(self.prof.stats)
 
-                urllib2.urlopen(
-                    '{0}saveprofile/{1}'.format(
-                        settings.PROFILE_SERVER_URL,
-                        self.filename[:-5],
-                    ),
-                    body,
-                ).close()
+                http = httplib2.Http()
+                http.follow_redirects = False
+                try:
+                    (response, body) = http.request(url, 'POST', body)
+                except socket.error:
+                    pass
+                else:
+                    if response['status'] in ('200', '303'):
+                        self.profile_url = '{0}profile/{1}'.format(
+                            settings.PROFILE_SERVER_URL,
+                            self.filename[:-5],
+                        )
             else:
                 self.prof.dump_stats(os.path.join(settings.PROFILE_DIR, self.filename))
             del self.prof
