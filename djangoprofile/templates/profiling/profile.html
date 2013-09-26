@@ -20,8 +20,14 @@ Profile : {{filename}}
 {% endblock %}
 
 {% block content %}
-  <div class="viewport">
-    <div class="graph" data-href-svg="{% url "profile_svg" filename=filename %}">
+  <div class="viewport-container">
+    <div class="viewport">
+        <div class="graph" data-href-svg="{% url "profile_svg" filename=filename %}">
+        </div>
+    </div>
+    <div class="zoom">
+        <button title="Zoom in" class="in"></button>
+        <button title="Zoom out" class="out"></button>
     </div>
   </div>
   <div class="info">

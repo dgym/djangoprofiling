@@ -1,9 +1,9 @@
-require(["jquery", 
-         "call-graph", 
+require(["call-graph", 
+         "viewport",
          "vendor/jquery.svg",
          "vendor/jquery.tmpl"],
 
-function($, CallGraph) {
+function(CallGraph, Viewport) {
 
     $(document).ready(function(){
 
@@ -13,46 +13,7 @@ function($, CallGraph) {
         });
         $(window).resize();
 
-        var $viewport = $('.viewport');
-        var $graph = $('.graph');
-
-        function restoreIntendedScale(svg) {
-            // Read in and split the viewBoxAttr
-            var viewBoxAttr = svg.root().attributes.viewBox;
-            if ( typeof viewBoxAttr !== 'undefined' ) {
-                var box = viewBoxAttr.value.split(' '),
-                    x = box[0],
-                    y = box[1];
-                    w = box[2];
-                    h = box[3];
-
-                // Apply these values to the 
-                svg.configure({"height": h, "width": w});
-            }
-        }
-
-        function scrollTo(left, top) {
-            $viewport.scrollLeft(left);
-            $viewport.scrollTop(top);
-        }
-
-        function centreInView($el, $graph) {
-            // Centre horizontally
-            var centreLeft = $graph.width()/2 - $el.width()/2;
-            var actualLeft = $el.position().left;
-            var moveLeft = actualLeft - centreLeft;
-
-            var viewLeft = $viewport.scrollLeft();
-
-            // Centre vertically
-            var centreTop = $graph.height()/2 - $el.width()/2;
-            var actualTop = $el.position().top;
-            var moveTop = actualTop - centreTop;
-
-            var viewTop = $viewport.scrollTop();
-
-            scrollTo(viewLeft + moveLeft, viewTop + moveTop);
-        }
+        var $graph = $('div.graph');
 
         function displayNodeInfo(node) {
 
@@ -69,14 +30,13 @@ function($, CallGraph) {
             $tmpl.tmpl(params).appendTo('.info');
         }
 
-
         $graph.svg({
             loadURL: $graph.data('href-svg'),
             onLoad: function(svg) {
                 var root = svg.root();
-                var $graph = $('.graph', root);
 
-                restoreIntendedScale(svg);
+                var viewport = new Viewport($(".viewport"), $graph, svg);
+                viewport.init();
 
                 var callgraph = new CallGraph(root);
                 callgraph.index();
@@ -84,7 +44,7 @@ function($, CallGraph) {
                 // Centre the initial call in the graph window.
                 var initialCall = callgraph.findEntryPoint();
                 if ( initialCall ) {
-                    centreInView(initialCall.$el, $('.graph'));
+                    viewport.centreOn(initialCall.$el);
                 }
 
                 $('.edge').click(function() {
@@ -111,11 +71,19 @@ function($, CallGraph) {
                     return false;
                 });
 
+                $(".zoom .in").click(function() {
+                    viewport.zoomIn(svg);
+                });
+
+                $(".zoom .out").click(function() {
+                    viewport.zoomOut(svg);
+                });
+
 
                 $('.info').on('click', '.node-list li', function() {
                     var node_id = $(this).data('node-id');
                     var $node = $('#' + node_id);
-                    centreInView($node, $('.graph'));
+                    viewport.centreOn($node);
 
                     displayNodeInfo(callgraph.nodes[node_id.substr(4)]);
                 });

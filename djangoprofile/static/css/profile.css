@@ -5,17 +5,65 @@ body {
   font-family: 'Open Sans', 'Verdana', sans-serif;
 }
 
+.viewport-container {
+    position: relative;
+    width: 75%;
+    float: left;
+}
+
+.viewport-container .zoom {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.zoom {
+    background: white;
+    padding: 5px;
+}
+
+.zoom button {
+    background: #f90 no-repeat 3px 3px;
+    color: white;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    font-size: 30px;
+    line-height: 22px;
+    margin: 5px;
+    display: block;
+    border: 5px solid #f90;
+    cursor: pointer;
+}
+
+.zoom button:hover {
+    border: 5px solid #fc0;
+}
+
+.zoom .in {
+    background-image: url("../icons/plus.png");
+}
+
+.zoom .out {
+    background-image: url("../icons/minus.png");
+}
+
 .viewport {
-  width: 75%;
+  width: 100%;
   height: 640px;
-  overflow: scroll;
+  overflow: hidden;
   float: left;
   margin-right: -200px;
+  border: 1px solid #ccc;
+  position: relative;
+  background: #eee;
 }
 
 .graph {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
+    cursor: move;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
 .info {
