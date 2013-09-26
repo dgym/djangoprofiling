@@ -14,7 +14,9 @@ Install Requirements
 Browser requirements
 --------------------
 
-Probably IE9+, Chrome, Firefox, Safari, Opera etc (basically anything with SVG capability)
+Works nicely in Chrome. Really slow in Firefox unfortunately.
+Theoretically it works in anything that's SVG capable, which is pretty much everything these days.
+
 
 Usage
 ----
@@ -34,3 +36,5 @@ TODO
 * confirm requirements
 * think of a better name
 * make it a proper admin page
+* integrate into django debug toolbar
+* Allow deletion / management of profiles
