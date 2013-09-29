@@ -10,6 +10,8 @@ Install Requirements
 * python >= 2.6
 * django >= 1.3
 * pydot >= 1.0.28
+* pyparsing == 1.5.7
+* httplib2 >= 0.8 (only if using the profile server)
 
 Browser requirements
 --------------------
@@ -36,5 +38,4 @@ TODO
 * confirm requirements
 * think of a better name
 * make it a proper admin page
-* integrate into django debug toolbar
 * Allow deletion / management of profiles
