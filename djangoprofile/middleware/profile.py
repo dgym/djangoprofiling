@@ -1,4 +1,3 @@
-import httplib2
 import cProfile
 import marshal
 import os.path
@@ -6,6 +5,7 @@ import socket
 import time
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 # Derived from http://djangosnippets.org/snippets/186/
 
@@ -42,6 +42,7 @@ class ProfileMiddleware(object):
                 self.prof.create_stats()
                 body = marshal.dumps(self.prof.stats)
 
+                import httplib2
                 http = httplib2.Http()
                 http.follow_redirects = False
                 try:
@@ -56,5 +57,9 @@ class ProfileMiddleware(object):
                         )
             else:
                 self.prof.dump_stats(os.path.join(settings.PROFILE_DIR, self.filename))
+                self.profile_url = reverse(
+                    'profile', 
+                    kwargs=dict(filename=self.filename[:-5]),
+                )
             del self.prof
         return response
