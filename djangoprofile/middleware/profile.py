@@ -1,6 +1,10 @@
-import os.path
-import time
+import httplib2
 import cProfile
+import marshal
+import os.path
+import socket
+import time
+
 from django.conf import settings
 
 # Derived from http://djangosnippets.org/snippets/186/
@@ -19,16 +23,38 @@ class ProfileMiddleware(object):
     """
     def process_request(self, request):
         if settings.DEBUG and 'prof' in request.GET:
-            filename = 'profile-{0}.prof'.format(
+            self.filename = 'profile-{0}.prof'.format(
                 time.strftime("%Y%m%dT%H%M%S", time.gmtime()))
-            self.filename = os.path.join(settings.PROFILE_DIR, filename)
             self.prof = cProfile.Profile()
 
     def process_view(self, request, callback, callback_args, callback_kwargs):
-        if settings.DEBUG and 'prof' in request.GET:
+        if hasattr(self, 'prof'):
             return self.prof.runcall(callback, request, *callback_args, **callback_kwargs)
 
     def process_response(self, request, response):
-        if settings.DEBUG and 'prof' in request.GET:
-            self.prof.dump_stats(self.filename)
+        if hasattr(self, 'prof'):
+            if getattr(settings, 'PROFILE_SERVER_URL', None):
+                url = '{0}saveprofile/{1}'.format(
+                    settings.PROFILE_SERVER_URL,
+                    self.filename[:-5],
+                )
+
+                self.prof.create_stats()
+                body = marshal.dumps(self.prof.stats)
+
+                http = httplib2.Http()
+                http.follow_redirects = False
+                try:
+                    (response, body) = http.request(url, 'POST', body)
+                except socket.error:
+                    pass
+                else:
+                    if response['status'] in ('200', '303'):
+                        self.profile_url = '{0}profile/{1}'.format(
+                            settings.PROFILE_SERVER_URL,
+                            self.filename[:-5],
+                        )
+            else:
+                self.prof.dump_stats(os.path.join(settings.PROFILE_DIR, self.filename))
+            del self.prof
         return response
